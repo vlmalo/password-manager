@@ -1,0 +1,18 @@
+:root {
+  --dark-color: black;
+  --light-color: white;
+}
+
+body {
+  background: var(--dark-color);
+  color: var(--light-color);
+}
+
+
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+.modal-open {
+  overflow: hidden;
+}
