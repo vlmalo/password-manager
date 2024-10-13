@@ -3,6 +3,7 @@ package com.manager.backend.entity;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,7 +12,6 @@ public class User {
     private String email;
     private String password;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

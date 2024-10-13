@@ -25,11 +25,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists.");
         }
 
-        userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully.");
+        User savedUser = userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
-    //all users
     @GetMapping("/api/users")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();

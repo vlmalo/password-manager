@@ -75,7 +75,6 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  // Toggles visibility of the confirm password field
   toggleConfirmPasswordVisibility(): void {
     const confirmPasswordField = document.getElementById('confirmPassword') as HTMLInputElement;
     const confirmPasswordIcon = document.getElementById('confirmPasswordIcon') as HTMLImageElement;
