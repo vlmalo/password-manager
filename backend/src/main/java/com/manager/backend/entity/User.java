@@ -1,22 +1,17 @@
-package com.manager.backend.model;
-
+package com.manager.backend.entity;
 
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private String email;
-
     private String password;
 
-    // Getters and setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }
