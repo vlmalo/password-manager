@@ -4,11 +4,9 @@ import {MainComponent} from "./pages/main/main.component";
 import {RegisterComponent} from "./pages/register/register.component";
 
 export const routes: Routes = [
-  {path: '', component: MainComponent},
-  {path: 'login', component: LoginPageComponent},
-  {path: 'register', component: RegisterComponent}
-  // +authorization
-
-
-
+  { path: 'login', component: LoginPageComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'dashboard', component: MainComponent},
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/login' }
 ];

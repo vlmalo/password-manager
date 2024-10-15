@@ -13,13 +13,13 @@ import { UserService } from '../../services/user.service';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
+  errorMessage: string | null = null; // To capture error messages
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router
   ) {
-    // Initialize the form with validation
     this.registerForm = this.fb.group({
       fullName: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
@@ -30,7 +30,6 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  // Custom validator to check if passwords match
   passwordsMatchValidator(formGroup: AbstractControl): { [key: string]: boolean } | null {
     const masterPassword = formGroup.get('masterPassword')?.value;
     const confirmPassword = formGroup.get('confirmPassword')?.value;
@@ -39,14 +38,12 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (this.registerForm.valid) {
-      // Constructing the formData object
       const formData = {
-        name: this.registerForm.value.fullName, // Matches the User entity's name field
-        email: this.registerForm.value.email, // Matches the User entity's email field
-        password: this.registerForm.value.masterPassword // Matches the User entity's password field
+        name: this.registerForm.value.fullName,
+        email: this.registerForm.value.email,
+        password: this.registerForm.value.masterPassword
       };
 
-      // Send data to backend using the UserService
       this.userService.registerUser(formData).subscribe(
         response => {
           console.log('User registered successfully', response);
@@ -54,14 +51,15 @@ export class RegisterComponent implements OnInit {
         },
         error => {
           console.error('Error registering user', error);
+          this.errorMessage = error; // Capture error messages
         }
       );
     } else {
       console.log('Form is invalid or passwords do not match');
+      this.errorMessage = 'Form is invalid or passwords do not match';
     }
   }
 
-  // Toggles visibility of the master password field
   toggleMasterPasswordVisibility(): void {
     const masterPasswordField = document.getElementById('masterPassword') as HTMLInputElement;
     const masterPasswordIcon = document.getElementById('masterPasswordIcon') as HTMLImageElement;

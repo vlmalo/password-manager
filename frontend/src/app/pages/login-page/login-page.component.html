@@ -2,24 +2,24 @@
   <img src="assets/images/login_page.png" alt="logo" class="logo">
 
   <div class="form-box">
-    <form action="" class="login-form">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <h1>Login</h1>
 
-        <label class="form-group">Email:
-        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
-        </label>
-
+      <label class="form-group">Email:
+        <input type="email" id="email" formControlName="email" class="form-control" placeholder="Enter your email" required>
+      </label>
 
       <label class="form-group">Password:
         <div class="password-container">
-          <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+          <input type="password" id="password" formControlName="password" class="form-control" placeholder="Enter your password" required>
           <button type="button" id="togglePassword" class="toggle-password-btn" (click)="togglePasswordVisibility()">
             <img src="assets/images/eye.png" alt="Show Password" id="passwordIcon" class="password-icon">
           </button>
         </div>
       </label>
+      <button type="submit" [disabled]="!loginForm.valid" class="btn">Login</button>
+      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
-      <button type="submit" class="btn">Login</button>
       <hr>
       <p class="new-here"> New here? <a href="../register" class="register-link"> Create an account! </a> </p>
     </form>

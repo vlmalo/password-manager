@@ -1,6 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {RouterOutlet} from "@angular/router";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet, Router } from "@angular/router";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { CommonModule } from '@angular/common';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-login-page',
@@ -8,32 +10,44 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/
   imports: [
     RouterOutlet,
     ReactiveFormsModule,
+    CommonModule
   ],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.css'
+  styleUrls: ['./login-page.component.css']
 })
-
 export class LoginPageComponent implements OnInit {
   loginForm: FormGroup;
+  errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void {}
 
-  }
-
-  // Method to handle form submission
   onSubmit(): void {
     if (this.loginForm.valid) {
-      console.log('Form Submitted!', this.loginForm.value);
+      const loginData = {
+        email: this.loginForm.value.email,
+        password: this.loginForm.value.password
+      };
 
+      this.userService.loginUser(loginData).subscribe(
+        response => {
+          console.log('Login successful', response);
+          this.router.navigate(['/dashboard']);
+        },
+        error => {
+          console.error('Login failed', error);
+          this.errorMessage = 'Invalid email or password. Please try again.';
+        }
+      );
     } else {
       console.log('Form is invalid');
+      this.errorMessage = 'Please fill in all required fields.';
     }
   }
 

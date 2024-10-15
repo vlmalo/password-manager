@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,31 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  registerUser(userData: any): Observable<any> {
-    return this.http.post('http://localhost:8080/api/users/register', userData);
+  loginUser(loginData: { email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, loginData, { withCredentials: true })
+      .pipe(catchError(this.handleError));
+  }
+
+  getUserDashboard(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/dashboard`, { withCredentials: true })
+      .pipe(catchError(this.handleError));
+  }
+
+  registerUser(formData: { name: string; email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, formData)
+      .pipe(catchError(this.handleError));
+  }
+
+
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'error';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(errorMessage);
   }
 }
