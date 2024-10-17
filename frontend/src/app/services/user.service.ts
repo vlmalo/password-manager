@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {Observable, tap, throwError} from 'rxjs';
+import { Observable, tap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -15,16 +15,15 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/login`, loginData, { withCredentials: true })
       .pipe(
         tap(response => {
-          localStorage.setItem('user', JSON.stringify(response));
+          this.saveUserData(response); // Use the saveUserData method
         }),
         catchError(this.handleError)
       );
   }
 
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('user');
+    return !!this.getUserData(); // Check if user data exists in local storage
   }
-
 
   getUserDashboard(): Observable<any> {
     return this.http.get(`${this.apiUrl}/dashboard`, { withCredentials: true })
@@ -34,6 +33,31 @@ export class UserService {
   registerUser(formData: { name: string; email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, formData)
       .pipe(catchError(this.handleError));
+  }
+
+  saveUserData(user: any): void {
+    localStorage.setItem('userData', JSON.stringify(user)); // Save user data to local storage
+  }
+
+  getUserData(): any {
+    return JSON.parse(localStorage.getItem('userData') || '{}'); // Retrieve user data from local storage
+  }
+
+  logout() {
+    return this.http.post('http://localhost:8080/api/users/logout', {}).pipe(
+      catchError((error) => {
+        console.error('Error logging out:', error);
+        return throwError(error);
+      })
+    ).subscribe(
+      () => {
+        localStorage.removeItem('userData');
+        console.log('Logout successful');
+      },
+      (error) => {
+        console.error('Logout failed', error);
+      }
+    );
   }
 
 

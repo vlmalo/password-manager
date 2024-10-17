@@ -2,6 +2,40 @@
   box-sizing: border-box;
 }
 
+.user-avatar {
+  cursor: pointer;
+}
+
+.user-data {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  background-color: #02121e;
+  border: 1px solid #122e46;
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+}
+.user-data button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.user-data h1 {
+  font-size: 16px;
+}
+.user-data p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+
 body {
   font-family: Arial, sans-serif;
   margin: 0; /* Remove default body margin */
