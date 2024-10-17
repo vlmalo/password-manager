@@ -68,8 +68,7 @@ export class MainComponent implements OnInit {
   fetchUserPasswords() {
     this.userService.getPasswords().subscribe(
       (data) => {
-        this.passwords = data; // Assuming the data is an array of passwords
-        console.log('Fetched Passwords:', this.passwords);
+        this.passwords = data;
       },
       (error) => {
         console.error('Error fetching passwords', error);

@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import {Component, HostListener, Input} from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,6 +9,11 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./gen-passwords.component.css']
 })
 export class GenPasswordsComponent {
+  @Input() password: any = {
+    itemName: 'No Name',
+    username: 'No Username',
+    uri: 'No URI',
+  };
   dropdownVisible = false;
 
   // Toggles dropdown visibility

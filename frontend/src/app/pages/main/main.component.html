@@ -33,16 +33,14 @@
       </div>
 
       <!-- Password entries -->
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
-      <app-gen-passwords></app-gen-passwords>
+      <div *ngIf="passwords.length > 0; else noPasswords">
+        <div *ngFor="let password of passwords">
+          <app-gen-passwords [password]="password"></app-gen-passwords>
+        </div>
+      </div>
+      <ng-template #noPasswords>
+        <p>No passwords available. Please add a new password.</p>
+      </ng-template>
 
       <app-add-password-modal *ngIf="isModalOpen" (close)="closeModal()"></app-add-password-modal>
     </main>
