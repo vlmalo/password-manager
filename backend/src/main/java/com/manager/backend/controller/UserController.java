@@ -10,11 +10,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -59,5 +62,29 @@ public class UserController {
         List<User> users = userRepository.findAll();
         return ResponseEntity.ok(users);
     }
+
+
+    @GetMapping("/api/users/dashboard")
+    public ResponseEntity<?> getUserDashboard() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        String email = ((UserDetails) authentication.getPrincipal()).getUsername();
+
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            User userDetails = user.get();
+            Map<String, Object> responseData = Map.of(
+                    "name", userDetails.getName(),
+                    "email", userDetails.getEmail(),
+                    "message", "Welcome to your dashboard, " + userDetails.getName() + "!"
+            );
+            return ResponseEntity.ok(responseData);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
+
 
 }

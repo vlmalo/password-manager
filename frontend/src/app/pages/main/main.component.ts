@@ -17,14 +17,25 @@ import { UserService } from '../../services/user.service';
 })
 export class MainComponent implements OnInit {
   isModalOpen: boolean = false;
-  userName: string | null = null; // Store the user's name
+  userData: any;
+  userName: string = '';
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
+    this.fetchUserDashboard();
   }
-
-
+  fetchUserDashboard() {
+    this.userService.getUserDashboard().subscribe(
+      (data) => {
+        this.userData = data;
+        this.userName = data.name;
+      },
+      (error) => {
+        console.error('Error fetching user dashboard data', error);
+      }
+    );
+  }
   openModal() {
     this.isModalOpen = true;
   }

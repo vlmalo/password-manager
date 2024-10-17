@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import {Observable, tap, throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
@@ -13,8 +13,18 @@ export class UserService {
 
   loginUser(loginData: { email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, loginData, { withCredentials: true })
-      .pipe(catchError(this.handleError));
+      .pipe(
+        tap(response => {
+          localStorage.setItem('user', JSON.stringify(response));
+        }),
+        catchError(this.handleError)
+      );
   }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('user');
+  }
+
 
   getUserDashboard(): Observable<any> {
     return this.http.get(`${this.apiUrl}/dashboard`, { withCredentials: true })
