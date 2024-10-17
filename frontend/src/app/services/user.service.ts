@@ -43,6 +43,18 @@ export class UserService {
     return JSON.parse(localStorage.getItem('userData') || '{}'); // Retrieve user data from local storage
   }
 
+  addPassword(passwordData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/passwords`, passwordData, { withCredentials: true });
+  }
+
+  updatePassword(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/passwords/${id}`, data, { withCredentials: true });
+  }
+
+  getPasswords(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/passwords`, { withCredentials: true });
+  }
+
   logout() {
     return this.http.post('http://localhost:8080/api/users/logout', {}).pipe(
       catchError((error) => {

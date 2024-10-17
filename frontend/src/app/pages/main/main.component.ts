@@ -22,8 +22,10 @@ export class MainComponent implements OnInit {
   isModalOpen: boolean = false;
   userData: any = {};
   showUserData: boolean = false;
+  selectedPassword: any = null;
+  passwords: any[] = []; // Store fetched passwords here
 
-  constructor(private userService: UserService, private router: Router, private authService: AuthService) {}
+  constructor(public userService: UserService, private router: Router, private authService: AuthService) {}
 
   toggleUserData() {
     this.showUserData = !this.showUserData;
@@ -37,6 +39,7 @@ export class MainComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUserData();
+    this.fetchUserPasswords(); // Fetch passwords on component initialization
   }
 
   loadUserData() {
@@ -62,12 +65,30 @@ export class MainComponent implements OnInit {
     );
   }
 
-  openModal() {
+  fetchUserPasswords() {
+    this.userService.getPasswords().subscribe(
+      (data) => {
+        this.passwords = data; // Assuming the data is an array of passwords
+        console.log('Fetched Passwords:', this.passwords);
+      },
+      (error) => {
+        console.error('Error fetching passwords', error);
+      }
+    );
+  }
+
+  openModal(isEdit: boolean = false, passwordData: any = null) {
+    this.selectedPassword = passwordData;
     this.isModalOpen = true;
+
+    if (this.selectedPassword) {
+      this.isModalOpen = true;
+    }
   }
 
   closeModal() {
     this.isModalOpen = false;
+    this.selectedPassword = null; // Reset selected password when closing
   }
 
   @HostListener('document:click', ['$event'])
