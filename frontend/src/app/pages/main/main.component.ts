@@ -19,6 +19,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
+  username: string | null = null;
+  email: string | null = null;
   isModalOpen: boolean = false;
   userData: any = {};
   showUserData: boolean = false;
@@ -30,51 +32,16 @@ export class MainComponent implements OnInit {
   toggleUserData() {
     this.showUserData = !this.showUserData;
   }
-
-  logout() {
+  logout(): void {
     this.userService.logout();
-    this.showUserData = false;
     this.router.navigate(['/login']);
   }
 
   ngOnInit(): void {
-    this.loadUserData();
-    this.fetchUserPasswords(); // Fetch passwords on component initialization
+    this.username = localStorage.getItem('username');
+    this.email = localStorage.getItem('email');
   }
 
-  loadUserData() {
-    const savedUserData = this.userService.getUserData();
-    if (savedUserData && savedUserData.email) {
-      this.userData = savedUserData;
-    } else {
-      this.fetchUserDashboard();
-    }
-  }
-
-  fetchUserDashboard() {
-    this.userService.getUserDashboard().subscribe(
-      (data) => {
-        this.userData = data.user;
-        this.authService.setUserData(this.userData);
-        this.userService.saveUserData(this.userData);
-        console.log('User Data:', this.userData);
-      },
-      (error) => {
-        console.error('Error fetching user dashboard data', error);
-      }
-    );
-  }
-
-  fetchUserPasswords() {
-    this.userService.getPasswords().subscribe(
-      (data) => {
-        this.passwords = data;
-      },
-      (error) => {
-        console.error('Error fetching passwords', error);
-      }
-    );
-  }
 
   openModal(isEdit: boolean = false, passwordData: any = null) {
     this.selectedPassword = passwordData;

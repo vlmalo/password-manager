@@ -7,14 +7,14 @@
       <img src="assets/images/user.png" alt="User Avatar" class="user-avatar" >
     </div>
 
-    <div *ngIf="showUserData" class="user-data">
-      <h1>Userdata:</h1>
-      <p>Name: {{ userData.name }}<p>
-      <p>Email: {{ userData.email }}</p>
-      <button (click)="logout()">Logout</button>
-    </div>
 
   </header>
+  <div *ngIf="showUserData" class="user-data">
+    <h1>Userdata:</h1>
+    <p>Name: {{ username}}<p>
+    <p>Email: {{ email }}</p>
+    <button (click)="logout()">Logout</button>
+  </div>
 
   <div class="layout">
     <nav class="sidebar-menu">

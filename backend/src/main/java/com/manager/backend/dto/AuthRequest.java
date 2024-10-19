@@ -1,7 +1,18 @@
-package com.manager.backend.entity;
-public class LoginRequest {
+package com.manager.backend.dto;
+
+public class AuthRequest {
     private String email;
     private String password;
+    private String token;
+
+    public AuthRequest() {
+    }
+
+    public AuthRequest(String email, String password, String token) {
+        this.email = email;
+        this.password = password;
+        this.token = token;
+    }
 
     public String getEmail() {
         return email;

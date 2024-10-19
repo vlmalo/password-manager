@@ -30,27 +30,31 @@ export class LoginPageComponent implements OnInit {
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const loginData = {
+      const authRequest = {
         email: this.loginForm.value.email,
         password: this.loginForm.value.password
       };
 
-      this.userService.loginUser(loginData).subscribe(
-        response => {
-          console.log('Login successful', response);
-          localStorage.setItem('userData', JSON.stringify(response));
+      this.userService.loginUser(authRequest).subscribe(
+        (response) => {
+          console.log('Login successful', response.message);
+          localStorage.setItem('jwtToken', response.token);
+          localStorage.setItem('username', response.username);
+          localStorage.setItem('email', response.email);
           this.router.navigate(['/dashboard']);
         },
-        error => {
+        (error) => {
           console.error('Login failed', error);
-          this.errorMessage = 'Invalid email or password. Please try again.';
+          this.errorMessage = 'Invalid email or password';
         }
       );
+
     } else {
       console.log('Form is invalid');
       this.errorMessage = 'Please fill in all required fields.';
     }
   }
+
 
   togglePasswordVisibility(): void {
     const passwordField = document.getElementById('password') as HTMLInputElement;

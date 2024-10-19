@@ -13,7 +13,7 @@ import { UserService } from '../../services/user.service';
 })
 export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
-  errorMessage: string | null = null; // To capture error messages
+  errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -35,8 +35,8 @@ export class RegisterComponent implements OnInit {
     const confirmPassword = formGroup.get('confirmPassword')?.value;
     return masterPassword === confirmPassword ? null : { passwordsMismatch: true };
   }
-
   onSubmit(): void {
+    console.log("Form submitted");
     if (this.registerForm.valid) {
       const formData = {
         name: this.registerForm.value.fullName,
@@ -50,8 +50,8 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error => {
-          console.error('Error registering user', error);
-          this.errorMessage = error; // Capture error messages
+          console.error('Error registering user', error); // Log the error
+          this.errorMessage = error.error?.message || 'An unknown error occurred';
         }
       );
     } else {
@@ -59,6 +59,7 @@ export class RegisterComponent implements OnInit {
       this.errorMessage = 'Form is invalid or passwords do not match';
     }
   }
+
 
   toggleMasterPasswordVisibility(): void {
     const masterPasswordField = document.getElementById('masterPassword') as HTMLInputElement;
