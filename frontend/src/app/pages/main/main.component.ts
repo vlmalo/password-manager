@@ -5,6 +5,7 @@ import { CommonModule } from "@angular/common";
 import { UserService } from '../../services/user.service';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import {PasswordService} from '../../services/password.service';
 
 @Component({
   selector: 'app-main',
@@ -25,9 +26,17 @@ export class MainComponent implements OnInit {
   userData: any = {};
   showUserData: boolean = false;
   selectedPassword: any = null;
-  passwords: any[] = []; // Store fetched passwords here
+  passwords: any[] = [];
 
-  constructor(public userService: UserService, private router: Router, private authService: AuthService) {}
+
+  constructor(public userService: UserService,
+              private router: Router,
+              private authService: AuthService,
+              private passwordService: PasswordService) {}
+
+
+
+
 
   toggleUserData() {
     this.showUserData = !this.showUserData;
@@ -40,7 +49,33 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.username = localStorage.getItem('username');
     this.email = localStorage.getItem('email');
+    this.loadPasswords();
   }
+
+  loadPasswords() {
+    this.passwordService.getPasswords().subscribe(
+      (data) => {
+        this.passwords = data;
+      },
+      (error) => {
+        console.error('Error loading passwords', error);
+      }
+    );
+  }
+
+
+  addPasswordEntry(password: any) {
+    this.passwordService.addPassword(password).subscribe(
+      (response) => {
+        this.passwords.push(response);
+        this.closeModal();
+      },
+      (error) => {
+        console.error('Error adding password', error);
+      }
+    );
+  }
+
 
 
   openModal(isEdit: boolean = false, passwordData: any = null) {
@@ -54,8 +89,10 @@ export class MainComponent implements OnInit {
 
   closeModal() {
     this.isModalOpen = false;
-    this.selectedPassword = null; // Reset selected password when closing
+    this.selectedPassword = null;
   }
+
+
 
   @HostListener('document:click', ['$event'])
   handleClickOutside(event: MouseEvent) {

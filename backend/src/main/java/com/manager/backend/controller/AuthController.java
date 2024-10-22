@@ -36,6 +36,7 @@ public class AuthController {
             User user = userRepository.findByEmail(authRequest.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
             String token = jwtUtil.generateToken(authRequest.getEmail(), user.getEmail()); // Pass email to generateToken
 
+
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
             response.put("username", user.getName());

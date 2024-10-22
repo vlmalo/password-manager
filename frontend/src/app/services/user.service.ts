@@ -17,14 +17,6 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  saveToken(token: string): void {
-    this.token = token; // Store the token in memory
-  }
-
-  getTokens(): string | null {
-    return this.token; // Retrieve the token
-  }
-
   private handleError(error: HttpErrorResponse): Observable<never> {
     return throwError('Something went wrong');
   }

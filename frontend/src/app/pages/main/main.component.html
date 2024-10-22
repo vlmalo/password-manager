@@ -42,7 +42,9 @@
         <p>No passwords available. Please add a new password.</p>
       </ng-template>
 
-      <app-add-password-modal *ngIf="isModalOpen" (close)="closeModal()"></app-add-password-modal>
-    </main>
+      <app-add-password-modal *ngIf="isModalOpen"
+                              (close)="closeModal()"
+                              (submit)="addPasswordEntry($event)">
+      </app-add-password-modal>    </main>
   </div>
 </div>
