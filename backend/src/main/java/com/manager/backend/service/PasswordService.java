@@ -28,4 +28,5 @@ public class PasswordService {
     public Password addPassword(Password password) {
         return passwordRepository.save(password);
     }
+
 }

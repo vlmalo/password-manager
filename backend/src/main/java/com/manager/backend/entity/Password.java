@@ -11,7 +11,8 @@ public class Password {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String item_name;
+
+    private String itemName;
     private String username;
     private String uri;
     private String password;
@@ -22,12 +23,13 @@ public class Password {
     // Constructors
     public Password() {}
 
-    public Password(String itemName, String username, String uri, String password, String notes) {
-        this.item_name = itemName;
+    public Password(String itemName, String username, String uri, String password, String notes, Long userId) {
+        this.itemName = itemName;
         this.username = username;
         this.uri = uri;
         this.password = password;
         this.notes = notes;
+        this.userId = userId;
     }
 
     // Getters and Setters
@@ -49,11 +51,11 @@ public class Password {
     }
 
     public String getItemName() {
-        return item_name;
+        return itemName;
     }
 
     public void setItemName(String itemName) {
-        this.item_name = itemName;
+        this.itemName = itemName;
     }
 
     public String getUsername() {

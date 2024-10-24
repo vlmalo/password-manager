@@ -9,13 +9,4 @@ export class AuthService {
   setUserData(data: any) {
     this.userData = data;
   }
-
-
-  getUserData() {
-    return this.userData;
-  }
-
-  clearUserData() {
-    this.userData = null;
-  }
 }

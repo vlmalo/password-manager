@@ -36,7 +36,13 @@ public class PasswordController {
     }
 
     @PostMapping
-    public ResponseEntity<Password> createPassword(@RequestBody Password password) {
+    public ResponseEntity<?> createPassword(@RequestBody Password password, @AuthenticationPrincipal UserDetails userDetails) {        System.out.println("Received Password: " + password);
+
+        if (password.getItemName() == null || password.getItemName().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Item name is required.");
+        }
+        Long userId = getUserIdFromUserDetails(userDetails);
+        password.setUserId(userId);
         Password newPassword = passwordService.addPassword(password);
         return ResponseEntity.ok(newPassword);
     }
