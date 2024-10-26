@@ -17,8 +17,8 @@
           </button>
         </div>
       </label>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
       <button type="submit" [disabled]="!loginForm.valid" class="btn">Login</button>
-      <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
 
       <hr>
       <p class="new-here"> New here? <a href="../register" class="register-link"> Create an account! </a> </p>

@@ -21,7 +21,9 @@
   border-radius: 5px;
   box-sizing: border-box;
   font-size: 14px;
-  margin-top: 5px;
+
+  border: none;
+  margin: 0;
 }
 
 .password-icon {
@@ -33,11 +35,26 @@
   color: #6c757d;
   margin-top: 5px;
   display: block;
-  margin-bottom: 10px;
+
 }
+
+.error-wrapper {
+  border: 1px solid #ff4d4d;
+  width: 100%;
+  border-radius: 5px;
+  box-sizing: border-box;
+  padding: 0;
+}
+
 .error-message {
   color: #ff4d4d;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+  padding: 2px;
 }
+
+
 
 .create-account {
   font-size: 26px;

@@ -3,6 +3,14 @@
   width: 100%;
 }
 
+.error-message {
+  color: #ff4d4d;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: block;
+  padding: 2px;
+}
+
 .form-control {
   width: 100%;
   padding: 10px;

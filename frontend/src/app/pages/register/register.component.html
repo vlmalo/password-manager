@@ -1,35 +1,88 @@
-
 <div class="register-container">
   <h1 class="create-account">Create account</h1>
   <div class="form-box">
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
       <label class="form-group">Full Name:
-        <input type="text" formControlName="fullName" id="full-name" name="full-name" class="form-control" placeholder="Enter your full name" required>
+        <div class="input-wrapper" [ngClass]="{ 'error-wrapper': registerForm.get('fullName')?.invalid && registerForm.get('fullName')?.touched }">
+          <input type="text" formControlName="fullName" id="full-name" name="full-name" class="form-control" placeholder="Enter your full name" required>
+          <small *ngIf="registerForm.get('fullName')?.hasError('required') && registerForm.get('fullName')?.touched" class="error-message">
+            Full Name is required.
+          </small>
+          <small *ngIf="registerForm.get('fullName')?.hasError('minlength') && registerForm.get('fullName')?.touched" class="error-message">
+            Full Name must be at least 2 characters.
+          </small>
+          <small *ngIf="registerForm.get('fullName')?.hasError('maxlength') && registerForm.get('fullName')?.touched" class="error-message">
+            Full Name cannot exceed 40 characters.
+          </small>
+          <small *ngIf="registerForm.get('fullName')?.hasError('pattern') && registerForm.get('fullName')?.touched" class="error-message">
+            Full Name should be one or two words with letters only.
+          </small>
+        </div>
+
         <small class="form-message" id="nameMessage">This will be your display name.</small>
       </label>
 
       <label class="form-group">Email:
-        <input type="email" formControlName="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+        <div class="input-wrapper" [ngClass]="{ 'error-wrapper': registerForm.get('email')?.invalid && registerForm.get('email')?.touched }">
+          <input type="email" formControlName="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+          <small *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched" class="error-message">
+            Email is required.
+          </small>
+          <small *ngIf="registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched" class="error-message">
+            Please enter a valid email address.
+          </small>
+          <small *ngIf="registerForm.get('email')?.hasError('maxlength') && registerForm.get('email')?.touched" class="error-message">
+            Email cannot exceed 50 characters.
+          </small>
+        </div>
+
         <small class="form-message" id="emailMessage">You'll use your email address to log in.</small>
       </label>
 
-      <label class="form-group">Master password:
-        <div class="password-container">
-          <input type="password" id="masterPassword" formControlName="masterPassword" class="form-control" placeholder="Create a password" required>
-          <button type="button" class="toggle-password-btn" (click)="toggleMasterPasswordVisibility()">
-            <img src="assets/images/eye.png" alt="Show Password" id="masterPasswordIcon" class="password-icon">
-          </button>
+      <label class="form-group">Master Password:
+        <div class="input-wrapper" [ngClass]="{ 'error-wrapper': registerForm.get('masterPassword')?.invalid && registerForm.get('masterPassword')?.touched }">
+          <div class="password-container">
+            <input type="password" id="masterPassword" formControlName="masterPassword" class="form-control" placeholder="Create a password" required>
+            <button type="button" class="toggle-password-btn" (click)="toggleMasterPasswordVisibility()">
+              <img src="assets/images/eye.png" alt="Show Password" id="masterPasswordIcon" class="password-icon">
+            </button>
+          </div>
+          <small *ngIf="registerForm.get('masterPassword')?.hasError('required') && registerForm.get('masterPassword')?.touched" class="error-message">
+            Password is required.
+          </small>
+          <small *ngIf="registerForm.get('masterPassword')?.hasError('minlength') && registerForm.get('masterPassword')?.touched" class="error-message">
+            Password must be at least 12 characters.
+          </small>
+          <small *ngIf="registerForm.get('masterPassword')?.hasError('maxlength') && registerForm.get('masterPassword')?.touched" class="error-message">
+            Password cannot exceed 24 characters.
+          </small>
+          <small *ngIf="registerForm.get('masterPassword')?.hasError('missingLetter') && registerForm.get('masterPassword')?.touched" class="error-message">
+            Password must include at least one letter.
+          </small>
+          <small *ngIf="registerForm.get('masterPassword')?.hasError('missingNumber') && registerForm.get('masterPassword')?.touched" class="error-message">
+            Password must include at least one number.
+          </small>
+          <small *ngIf="registerForm.get('masterPassword')?.hasError('missingSpecial') && registerForm.get('masterPassword')?.touched" class="error-message">
+            Password must include at least one special character (!&#64;#$%^&*).
+          </small>
         </div>
         <small class="form-message" id="passwordMessage"><b>Important:</b> Your master password cannot be recovered if you forget it! 12 character minimum.</small>
       </label>
 
       <label class="form-group">Confirm Password:
-        <div class="password-container">
-          <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control" placeholder="Confirm your password" required>
-          <button type="button" class="toggle-password-btn" (click)="toggleConfirmPasswordVisibility()">
-            <img src="assets/images/eye.png" alt="Show Password" id="confirmPasswordIcon" class="password-icon">
-          </button>
+        <div class="input-wrapper" [ngClass]="{ 'error-wrapper': registerForm.hasError('passwordsMismatch') && registerForm.get('confirmPassword')?.touched }">
+          <div class="password-container">
+            <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+            <button type="button" class="toggle-password-btn" (click)="toggleConfirmPasswordVisibility()">
+              <img src="assets/images/eye.png" alt="Show Password" id="confirmPasswordIcon" class="password-icon">
+            </button>
+          </div>
+          <small *ngIf="registerForm.hasError('passwordsMismatch') && registerForm.get('confirmPassword')?.touched" class="error-message">
+            Passwords do not match.
+          </small>
         </div>
+
         <small class="form-message" id="confirmPasswordMessage">Both passwords should match.</small>
       </label>
 
@@ -37,6 +90,5 @@
       <hr>
       <p class="already-member">Already have an account? <a href="../login" class="login-link">Log in here!</a></p>
     </form>
-
   </div>
-      </div>
+</div>

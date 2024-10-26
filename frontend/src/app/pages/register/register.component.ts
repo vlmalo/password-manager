@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ReactiveFormsModule,
+  ValidationErrors
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
@@ -21,13 +28,47 @@ export class RegisterComponent implements OnInit {
     private router: Router
   ) {
     this.registerForm = this.fb.group({
-      fullName: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      masterPassword: ['', [Validators.required, Validators.minLength(12)]],
+      fullName: ['',     [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(40),
+        Validators.pattern(/^[A-Za-z]+(\s[A-Za-z]+)?$/)
+      ]],
+      email: [
+        '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.maxLength(50)
+        ]],
+      masterPassword: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(12),
+          Validators.maxLength(24),
+          this.passwordValidator
+        ]],
       confirmPassword: ['', [Validators.required]]
     }, { validators: this.passwordsMatchValidator });
   }
 
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value || '';
+    const errors: ValidationErrors = {};
+
+    if (!/[A-Za-z]/.test(value)) {
+      errors['missingLetter'] = true;
+    }
+    if (!/[0-9]/.test(value)) {
+      errors['missingNumber'] = true;
+    }
+    if (!/[!@#$%^&*]/.test(value)) {
+      errors['missingSpecial'] = true;
+    }
+
+    return Object.keys(errors).length ? errors : null;
+  }
   ngOnInit(): void {}
 
   passwordsMatchValidator(formGroup: AbstractControl): { [key: string]: boolean } | null {

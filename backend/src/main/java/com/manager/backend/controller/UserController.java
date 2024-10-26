@@ -2,6 +2,7 @@ package com.manager.backend.controller;
 import com.manager.backend.dto.UserRegistrationDto;
 import com.manager.backend.entity.User;
 import com.manager.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRegistrationDto registrationDto) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserRegistrationDto registrationDto) {
         try {
             User registeredUser = userService.registerUser(registrationDto);
             Map<String, String> response = new HashMap<>();
