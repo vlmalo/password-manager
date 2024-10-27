@@ -22,6 +22,11 @@ public class PasswordService {
         return passwordRepository.findByUserId(userId);
     }
 
+    public Optional<Password> getPasswordById(Long id) {
+        return passwordRepository.findById(id);
+    }
+
+
     public List<Password> getAllPasswords() {
         return passwordRepository.findAll();
     }

@@ -15,6 +15,7 @@ export class GenPasswordsComponent {
     username: 'No Username',
     uri: 'No URI',
   };
+  @Output() modifyPassword = new EventEmitter<any>();
   dropdownVisible = false;
   @Output() passwordDeleted = new EventEmitter<void>();
 
@@ -53,9 +54,8 @@ export class GenPasswordsComponent {
     });
   }
 
-
   modify() {
-    console.log('Modify!');
+    this.modifyPassword.emit(this.password);
     this.dropdownVisible = false;
 
   }

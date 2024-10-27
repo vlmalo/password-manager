@@ -28,6 +28,8 @@ export class MainComponent implements OnInit {
   selectedPassword: any = null;
   passwords: any[] = [];
   isSubmitting = false;
+  passwordToEdit: any = null;
+
 
   constructor(
     public userService: UserService,
@@ -71,34 +73,46 @@ export class MainComponent implements OnInit {
     if (form.valid && !this.isSubmitting) {
       this.isSubmitting = true;
 
-      const newPasswordData = {
-        itemName: form.value.itemName || 'Service',
+      const passwordData = {
+        id: this.passwordToEdit.id || null,  // Ensures that ID is included for updates
+        itemName: form.value.itemName || this.passwordToEdit.itemName || 'Service',
         username: form.value.username,
         password: form.value.password,
         uri: form.value.uri,
         notes: form.value.notes,
       };
 
-      this.passwordService.addPassword(newPasswordData).subscribe(
+      const saveObservable = passwordData.id
+        ? this.passwordService.updatePassword(passwordData.id, passwordData)
+        : this.passwordService.addPassword(passwordData);
+
+      saveObservable.subscribe(
         (response) => {
-          console.log('Password added successfully:', response);
-          this.passwords.push(response);
+          console.log('Password saved successfully:', response);
           this.loadPasswords();
           this.closeModal();
         },
         (error) => {
-          console.error('Error adding password', error);
+          console.error('Error saving password', error);
         },
         () => {
-          this.isSubmitting = false; // Reset submission state
+          this.isSubmitting = false;  // Reset submission state
         }
       );
     }
   }
 
-  openModal() {
+  openModal(password?: any) {
+    this.passwordToEdit = password || {
+      itemName: 'Service',
+      username: '',
+      password: '',
+      uri: '',
+      notes: '',
+    };
     this.isModalOpen = true;
   }
+
 
   closeModal() {
     this.isModalOpen = false;

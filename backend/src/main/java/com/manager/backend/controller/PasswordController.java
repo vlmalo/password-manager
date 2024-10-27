@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/passwords")
@@ -37,27 +38,37 @@ public class PasswordController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPassword(@RequestBody Password password, @AuthenticationPrincipal UserDetails userDetails) {        System.out.println("Received Password: " + password);
+    public ResponseEntity<Password> createPassword(@RequestBody Password password, @AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("Received Password: " + password);
 
         if (password.getItemName() == null || password.getItemName().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Item name is required.");
+            return ResponseEntity.badRequest().build();
         }
+
         Long userId = getUserIdFromUserDetails(userDetails);
         password.setUserId(userId);
         Password newPassword = passwordService.addPassword(password);
         return ResponseEntity.ok(newPassword);
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody Password updatedPassword, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Password> updatePassword(@PathVariable Long id, @RequestBody Password updatedPassword, @AuthenticationPrincipal UserDetails userDetails) {
+        System.out.println("Updating password with ID: " + id);
         Long userId = getUserIdFromUserDetails(userDetails);
         if (!passwordService.userOwnsPassword(userId, id)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+        if (!passwordService.getPasswordById(id).isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         updatedPassword.setUserId(userId);
         Password modifiedPassword = passwordService.updatePassword(id, updatedPassword);
         return ResponseEntity.ok(modifiedPassword);
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePassword(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
@@ -67,6 +78,20 @@ public class PasswordController {
         }
         passwordService.deletePassword(id);
         return ResponseEntity.ok().body("{\"message\": \"Password entry deleted successfully.\"}");
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPasswordById(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        Long userId = getUserIdFromUserDetails(userDetails);
+
+        if (!passwordService.userOwnsPassword(userId, id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access");
+        }
+
+        Optional<Password> password = passwordService.getPasswordById(id);
+
+        return password
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
 

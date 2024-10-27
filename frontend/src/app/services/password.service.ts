@@ -49,8 +49,8 @@ export class PasswordService {
 
 
 
-  updatePassword(passwordId: number, updatedData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${passwordId}`, updatedData, {
+  updatePassword(id: number, passwordData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, passwordData, {
       headers: this.getAuthHeaders(),
     }).pipe(
       tap(response => console.log('Response from updatePassword:', response)),
@@ -61,9 +61,13 @@ export class PasswordService {
     );
   }
 
+
+
+
   getPasswords(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl, {
       headers: this.getAuthHeaders(),
     });
   }
+
 }
