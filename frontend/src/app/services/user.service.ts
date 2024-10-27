@@ -31,6 +31,6 @@ export class UserService {
     localStorage.removeItem('jwtToken');
     localStorage.removeItem('username');
     localStorage.removeItem('email');
-
+    this.token = null;
   }
 }

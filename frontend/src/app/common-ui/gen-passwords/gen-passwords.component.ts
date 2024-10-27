@@ -1,5 +1,6 @@
-import {Component, HostListener, Input} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {PasswordService} from '../../services/password.service';
 
 @Component({
   selector: 'app-gen-passwords',
@@ -15,6 +16,10 @@ export class GenPasswordsComponent {
     uri: 'No URI',
   };
   dropdownVisible = false;
+  @Output() passwordDeleted = new EventEmitter<void>();
+
+  constructor(private passwordService: PasswordService) {
+  }
 
   // Toggles dropdown visibility
   toggleDropdown() {
@@ -35,26 +40,39 @@ export class GenPasswordsComponent {
   }
 
   copyUsername() {
-    console.log('Username copied!');
-
+    navigator.clipboard.writeText(this.password.username).then(() => {
+      console.log('Username copied!');
+      this.dropdownVisible = false;
+    });
   }
 
   copyPassword() {
-    console.log('Password copied!');
+    navigator.clipboard.writeText(this.password.password).then(() => {
+      console.log('Password copied!');
+      this.dropdownVisible = false;
+    });
   }
 
-  cloneEntry() {
-    console.log('Entry cloned!');
-
-  }
 
   modify() {
     console.log('Modify!');
+    this.dropdownVisible = false;
 
   }
 
   deleteEntry() {
-    console.log('Entry deleted!');
+    const confirmDelete = window.confirm('Are you sure you want to delete this entry?');
 
+    if (confirmDelete) {
+      this.passwordService.deletePassword(this.password.id).subscribe(
+        () => {
+          console.log('Entry deleted!');
+          this.passwordDeleted.emit();
+        },
+        error => console.error('Error deleting entry:', error)
+      );
+    }
+
+    this.dropdownVisible = false;
   }
 }

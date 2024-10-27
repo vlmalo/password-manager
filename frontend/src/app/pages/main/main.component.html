@@ -33,7 +33,9 @@
       <!-- Password entries -->
       <div *ngIf="passwords.length > 0; else noPasswords">
         <div *ngFor="let password of passwords">
-          <app-gen-passwords [password]="password"></app-gen-passwords>
+          <app-gen-passwords [password]="password"
+                             (passwordDeleted)="onPasswordDeleted()"
+          ></app-gen-passwords>
         </div>
       </div>
       <ng-template #noPasswords>

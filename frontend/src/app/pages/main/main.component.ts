@@ -40,6 +40,10 @@ export class MainComponent implements OnInit {
     this.showUserData = !this.showUserData;
   }
 
+  onPasswordDeleted() {
+    this.loadPasswords();
+  }
+
   logout(): void {
     this.userService.logout();
     this.router.navigate(['/login']);
@@ -61,6 +65,7 @@ export class MainComponent implements OnInit {
       }
     );
   }
+
 
   submitPassword(form: any) {
     if (form.valid && !this.isSubmitting) {

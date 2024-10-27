@@ -35,7 +35,31 @@ export class PasswordService {
     );
   }
 
+  deletePassword(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, {
+      headers: this.getAuthHeaders(),
+    }).pipe(
+      tap(response => console.log('Response from deletePassword:', response)),
+      catchError(error => {
+        console.error('Error deleting password:', error);
+        return throwError(error);
+      })
+    );
+  }
 
+
+
+  updatePassword(passwordId: number, updatedData: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${passwordId}`, updatedData, {
+      headers: this.getAuthHeaders(),
+    }).pipe(
+      tap(response => console.log('Response from updatePassword:', response)),
+      catchError(error => {
+        console.error('Error updating password:', error);
+        return throwError(error);
+      })
+    );
+  }
 
   getPasswords(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl, {

@@ -4,6 +4,7 @@ import com.manager.backend.entity.Password;
 import com.manager.backend.service.PasswordService;
 import com.manager.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -46,4 +47,28 @@ public class PasswordController {
         Password newPassword = passwordService.addPassword(password);
         return ResponseEntity.ok(newPassword);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updatePassword(@PathVariable Long id, @RequestBody Password updatedPassword, @AuthenticationPrincipal UserDetails userDetails) {
+        Long userId = getUserIdFromUserDetails(userDetails);
+        if (!passwordService.userOwnsPassword(userId, id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access");
+        }
+        updatedPassword.setUserId(userId);
+        Password modifiedPassword = passwordService.updatePassword(id, updatedPassword);
+        return ResponseEntity.ok(modifiedPassword);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePassword(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        Long userId = getUserIdFromUserDetails(userDetails);
+        if (!passwordService.userOwnsPassword(userId, id)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access");
+        }
+        passwordService.deletePassword(id);
+        return ResponseEntity.ok().body("{\"message\": \"Password entry deleted successfully.\"}");
+    }
+
+
+
 }

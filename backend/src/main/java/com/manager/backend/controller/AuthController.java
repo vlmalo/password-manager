@@ -3,8 +3,10 @@ package com.manager.backend.controller;
 import com.manager.backend.config.JwtUtil;
 import com.manager.backend.dto.AuthRequest;
 import com.manager.backend.dto.AuthResponse;
+import com.manager.backend.dto.UserLoginDto;
 import com.manager.backend.entity.User;
 import com.manager.backend.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +32,11 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto loginDto) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-            User user = userRepository.findByEmail(authRequest.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
-            String token = jwtUtil.generateToken(authRequest.getEmail(), user.getEmail()); // Pass email to generateToken
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+            User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
+            String token = jwtUtil.generateToken(loginDto.getEmail(), user.getEmail());
 
 
             Map<String, Object> response = new HashMap<>();
