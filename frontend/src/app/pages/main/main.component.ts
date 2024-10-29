@@ -29,6 +29,7 @@ export class MainComponent implements OnInit {
   passwords: any[] = [];
   isSubmitting = false;
   passwordToEdit: any = null;
+  masterPassword: string = '';
 
 
   constructor(
@@ -58,12 +59,13 @@ export class MainComponent implements OnInit {
   }
 
   loadPasswords() {
-    this.passwordService.getPasswords().subscribe(
-      (data) => {
-        this.passwords = data;
+
+    this.passwordService.getPasswords(this.masterPassword).subscribe(
+      (passwords) => {
+        this.passwords = passwords;
       },
       (error) => {
-        console.error('Error loading passwords', error);
+        console.error("Error loading passwords", error);
       }
     );
   }
@@ -74,7 +76,7 @@ export class MainComponent implements OnInit {
       this.isSubmitting = true;
 
       const passwordData = {
-        id: this.passwordToEdit.id || null,  // Ensures that ID is included for updates
+        id: this.passwordToEdit.id || null,
         itemName: form.value.itemName || this.passwordToEdit.itemName || 'Service',
         username: form.value.username,
         password: form.value.password,
@@ -84,8 +86,7 @@ export class MainComponent implements OnInit {
 
       const saveObservable = passwordData.id
         ? this.passwordService.updatePassword(passwordData.id, passwordData)
-        : this.passwordService.addPassword(passwordData);
-
+        : this.passwordService.addPassword(passwordData, this.masterPassword);
       saveObservable.subscribe(
         (response) => {
           console.log('Password saved successfully:', response);

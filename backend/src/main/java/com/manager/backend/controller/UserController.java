@@ -30,10 +30,4 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
-
-
-    @GetMapping("/dashboard")
-    public ResponseEntity<?> getDashboard() {
-        return ResponseEntity.ok("Dashboard data");
-    }
 }

@@ -17,6 +17,7 @@ public class Password {
     private String uri;
     private String password;
     private String notes;
+    private byte[] salt;
 
     @Column(name = "user_id")
     private Long userId;
@@ -33,7 +34,13 @@ public class Password {
     }
 
     // Getters and Setters
+    public byte[] getSalt() {
+        return salt;
+    }
 
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
+    }
     public Long getUserId() {
         return userId;
     }

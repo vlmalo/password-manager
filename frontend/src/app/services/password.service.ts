@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Observable, tap, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import {Password} from './password.modal';
+
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +20,7 @@ export class PasswordService {
     });
   }
 
-  addPassword(passwordData: any): Observable<any> {
+  addPassword(passwordData: any, masterPassword: string): Observable<any> {
     if (!passwordData.itemName || passwordData.itemName.trim() === '') {
       console.warn('itemName is required. Submission blocked.');
       return throwError('itemName is required.');
@@ -26,6 +28,7 @@ export class PasswordService {
 
     return this.http.post<any>(this.apiUrl, passwordData, {
       headers: this.getAuthHeaders(),
+      params: { masterPassword }
     }).pipe(
       tap(response => console.log('Response from addPassword:', response)),
       catchError(error => {
@@ -47,8 +50,6 @@ export class PasswordService {
     );
   }
 
-
-
   updatePassword(id: number, passwordData: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, passwordData, {
       headers: this.getAuthHeaders(),
@@ -61,13 +62,17 @@ export class PasswordService {
     );
   }
 
-
-
-
-  getPasswords(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl, {
+  getPasswords(masterPassword: string): Observable<Password[]> {
+    const params = new HttpParams().set('masterPassword', masterPassword);
+    return this.http.get<Password[]>(this.apiUrl, {
       headers: this.getAuthHeaders(),
-    });
+      params,
+    }).pipe(
+      tap(passwords => console.log('Fetched passwords:', passwords)),
+      catchError(error => {
+        console.error('Error fetching passwords:', error);
+        return throwError(error);
+      })
+    );
   }
-
 }

@@ -1,5 +1,6 @@
 package com.manager.backend.controller;
 
+import com.manager.backend.config.AESUtil;
 import com.manager.backend.entity.Password;
 import com.manager.backend.service.PasswordService;
 import com.manager.backend.service.UserService;
@@ -27,9 +28,9 @@ public class PasswordController {
     }
 
     @GetMapping
-    public List<Password> getPasswords(@AuthenticationPrincipal UserDetails userDetails) {
+    public List<Password> getPasswords(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String masterPassword) {
         Long userId = getUserIdFromUserDetails(userDetails);
-        return passwordService.getPasswordsByUserId(userId);
+        return passwordService.getPasswordsByUserId(userId, masterPassword);
     }
 
     private Long getUserIdFromUserDetails(UserDetails userDetails) {
@@ -38,7 +39,7 @@ public class PasswordController {
     }
 
     @PostMapping
-    public ResponseEntity<Password> createPassword(@RequestBody Password password, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Password> createPassword(@RequestBody Password password, @RequestParam String masterPassword, @AuthenticationPrincipal UserDetails userDetails) {
         System.out.println("Received Password: " + password);
 
         if (password.getItemName() == null || password.getItemName().trim().isEmpty()) {
@@ -47,13 +48,17 @@ public class PasswordController {
 
         Long userId = getUserIdFromUserDetails(userDetails);
         password.setUserId(userId);
-        Password newPassword = passwordService.addPassword(password);
+
+        byte[] salt = AESUtil.generateSalt();
+
+        Password newPassword = passwordService.addPassword(password, masterPassword, salt);
         return ResponseEntity.ok(newPassword);
     }
 
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Password> updatePassword(@PathVariable Long id, @RequestBody Password updatedPassword, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Password> updatePassword(@PathVariable Long id, @RequestBody Password updatedPassword, @RequestParam String masterPassword, @AuthenticationPrincipal UserDetails userDetails) {
         System.out.println("Updating password with ID: " + id);
         Long userId = getUserIdFromUserDetails(userDetails);
         if (!passwordService.userOwnsPassword(userId, id)) {
@@ -64,7 +69,8 @@ public class PasswordController {
         }
 
         updatedPassword.setUserId(userId);
-        Password modifiedPassword = passwordService.updatePassword(id, updatedPassword);
+        byte[] salt = AESUtil.generateSalt();
+        Password modifiedPassword = passwordService.updatePassword(id, updatedPassword, masterPassword, salt);
         return ResponseEntity.ok(modifiedPassword);
     }
 
