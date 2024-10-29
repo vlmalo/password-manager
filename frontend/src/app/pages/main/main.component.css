@@ -2,6 +2,21 @@
   box-sizing: border-box;
 }
 
+.form-control.ng-invalid.ng-touched {
+  border-color: red;
+}
+
+.form-group small {
+  color: red;
+  font-size: 12px;
+}
+
+.modal .btn[disabled] {
+  background-color: lightgray;
+  cursor: not-allowed;
+}
+
+
 .user-avatar {
   cursor: pointer;
 }

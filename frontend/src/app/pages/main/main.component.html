@@ -36,7 +36,7 @@
           <app-gen-passwords [password]="password"
                              (passwordDeleted)="onPasswordDeleted()"
                              (modifyPassword)="openModal($event)">
-          ></app-gen-passwords>
+            ></app-gen-passwords>
         </div>
       </div>
       <ng-template #noPasswords>
@@ -53,33 +53,59 @@
           <form #addPasswordForm="ngForm" (ngSubmit)="submitPassword(addPasswordForm)">
             <div class="form-group">
               <label for="itemName">New Item</label>
-              <input type="text" id="itemName" name="itemName" class="form-control" [(ngModel)]="passwordToEdit.itemName" required>
+              <input type="text" id="itemName" name="itemName" class="form-control" [(ngModel)]="passwordToEdit.itemName" required minlength="3" maxlength="50">
+              <div *ngIf="addPasswordForm.controls['itemName']?.invalid && (addPasswordForm.controls['itemName']?.dirty || addPasswordForm.controls['itemName']?.touched)">
+                <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['required']">Item name is required.</small>
+                <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['minlength']">Item name must be at least 3 characters.</small>
+                <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['maxlength']">Item name cannot exceed 50 characters.</small>
+              </div>
             </div>
 
             <div class="form-group input-row">
               <div class="input-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control" [(ngModel)]="passwordToEdit.username" required>
+                <input type="text" id="username" name="username" class="form-control" [(ngModel)]="passwordToEdit.username" required minlength="3" maxlength="50">
+                <div *ngIf="addPasswordForm.controls['username']?.invalid && (addPasswordForm.controls['username']?.dirty || addPasswordForm.controls['username']?.touched)">
+                  <small *ngIf="addPasswordForm.controls['username']?.errors?.['required']">Username is required.</small>
+                  <small *ngIf="addPasswordForm.controls['username']?.errors?.['minlength']">Username must be at least 3 characters.</small>
+                  <small *ngIf="addPasswordForm.controls['username']?.errors?.['maxlength']">Username cannot exceed 50 characters.</small>
+                </div>
               </div>
+
               <div class="input-group">
                 <label for="uri">URI</label>
-                <input type="text" id="uri" name="uri" class="form-control" [(ngModel)]="passwordToEdit.uri">
+                <input type="text" id="uri" name="uri" class="form-control" [(ngModel)]="passwordToEdit.uri" pattern="https?://.+" title="Include http:// or https://">
+                <div *ngIf="addPasswordForm.controls['uri']?.invalid && (addPasswordForm.controls['uri']?.dirty || addPasswordForm.controls['uri']?.touched)">
+                  <small *ngIf="addPasswordForm.controls['uri']?.errors?.['pattern']">Please enter a valid URL starting with http:// or https://</small>
+                </div>
               </div>
             </div>
 
             <div class="form-group">
               <label for="password">Password:</label>
               <div class="password-container">
-                <input type="password" id="password" name="password" [(ngModel)]="passwordToEdit.password" required class="form-control">
+                <input type="password" id="password" name="password" [(ngModel)]="passwordToEdit.password" required minlength="1" maxlength="64" class="form-control">
                 <button type="button" class="toggle-password-btn" (click)="togglePasswordVisibility('password')">
                   <img src="assets/images/eye.png" alt="Show Password" id="passwordIcon" class="password-icon">
                 </button>
+              </div>
+              <div *ngIf="addPasswordForm.controls['password']?.invalid && (addPasswordForm.controls['password']?.dirty || addPasswordForm.controls['password']?.touched)">
+                <small *ngIf="addPasswordForm.controls['password']?.errors?.['required']">Password is required.</small>
+                <small *ngIf="addPasswordForm.controls['password']?.errors?.['minlength']">Password must be at least 1 character.</small>
+                <small *ngIf="addPasswordForm.controls['password']?.errors?.['maxlength']">Password cannot exceed 64 characters.</small>
               </div>
             </div>
 
             <div class="form-group">
               <label for="notes">Notes</label>
-              <textarea id="notes" name="notes" class="form-control" [(ngModel)]="passwordToEdit.notes"></textarea>
+              <textarea id="notes" name="notes" class="form-control"
+                        [(ngModel)]="passwordToEdit.notes"
+                        minlength="0" maxlength="200"
+                        pattern="^[a-zA-Z0-9\s.,!@#\$%\^&\*\(\)]+$"></textarea>
+              <div *ngIf="addPasswordForm.controls['notes']?.invalid && (addPasswordForm.controls['notes']?.dirty || addPasswordForm.controls['notes']?.touched)">
+                <small *ngIf="addPasswordForm.controls['notes']?.errors?.['maxlength']">Notes cannot exceed 200 characters.</small>
+                <small *ngIf="addPasswordForm.controls['notes']?.errors?.['pattern']">Only certain special characters are allowed (.,!&#64;#$%^&*).</small>
+              </div>
             </div>
 
             <button class="btn" type="submit" [disabled]="isSubmitting">Submit</button>

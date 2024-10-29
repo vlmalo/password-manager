@@ -2,6 +2,9 @@ package com.manager.backend.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "passwords")
@@ -11,12 +14,25 @@ public class Password {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
+    @NotBlank(message = "Item name is required.")
+    @Size(min = 3, max = 50, message = "Item name must be between 3 and 50 characters.")
     private String itemName;
+
+    @NotBlank(message = "Username is required.")
+    @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters.")
     private String username;
+
+    @Pattern(regexp = "https?://.+", message = "URI must start with http:// or https://")
     private String uri;
+
+    @NotBlank(message = "Password is required.")
+    @Size(min = 1, max = 64, message = "Password must be between 1 and 64 characters.")
     private String password;
+
+    @Size(max = 200, message = "Notes cannot exceed 200 characters.")
+    @Pattern(regexp = "^[a-zA-Z0-9\\s.,!@#$%^&*()]*$", message = "Only certain special characters are allowed (.,!@#$%^&*).")
     private String notes;
+
     private byte[] salt;
 
     @Column(name = "user_id")
