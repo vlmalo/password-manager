@@ -53,22 +53,24 @@
           <form #addPasswordForm="ngForm" (ngSubmit)="submitPassword(addPasswordForm)">
             <div class="form-group">
               <label for="itemName">New Item</label>
-              <input type="text" id="itemName" name="itemName" class="form-control" [(ngModel)]="passwordToEdit.itemName" required minlength="3" maxlength="50">
+              <input type="text" id="itemName" name="itemName" class="form-control" [(ngModel)]="passwordToEdit.itemName" required minlength="3" maxlength="50" pattern="^[a-zA-Z0-9._-]*">
               <div *ngIf="addPasswordForm.controls['itemName']?.invalid && (addPasswordForm.controls['itemName']?.dirty || addPasswordForm.controls['itemName']?.touched)">
                 <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['required']">Item name is required.</small>
                 <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['minlength']">Item name must be at least 3 characters.</small>
                 <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['maxlength']">Item name cannot exceed 50 characters.</small>
+                <small *ngIf="addPasswordForm.controls['itemNam']?.errors?.['pattern']">Item name can only contain letters, numbers, '.', '-', and '_'.</small>
               </div>
             </div>
 
             <div class="form-group input-row">
               <div class="input-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" class="form-control" [(ngModel)]="passwordToEdit.username" required minlength="3" maxlength="50">
+                <input type="text" id="username" name="username" class="form-control" [(ngModel)]="passwordToEdit.username" required minlength="3" maxlength="50" pattern="^[a-zA-Z0-9._-]*">
                 <div *ngIf="addPasswordForm.controls['username']?.invalid && (addPasswordForm.controls['username']?.dirty || addPasswordForm.controls['username']?.touched)">
                   <small *ngIf="addPasswordForm.controls['username']?.errors?.['required']">Username is required.</small>
                   <small *ngIf="addPasswordForm.controls['username']?.errors?.['minlength']">Username must be at least 3 characters.</small>
                   <small *ngIf="addPasswordForm.controls['username']?.errors?.['maxlength']">Username cannot exceed 50 characters.</small>
+                  <small *ngIf="addPasswordForm.controls['username']?.errors?.['pattern']">Username can only contain letters, numbers, '.', '-', and '_'.</small>
                 </div>
               </div>
 

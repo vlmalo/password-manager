@@ -14,15 +14,17 @@ public class Password {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Pattern(regexp = "^[a-zA-Z0-9._-]*$", message = "Item name can only contain letters, numbers, '.', '-', and '_'.")
     @NotBlank(message = "Item name is required.")
     @Size(min = 3, max = 50, message = "Item name must be between 3 and 50 characters.")
     private String itemName;
 
+    @Pattern(regexp = "^[a-zA-Z0-9._-]*$", message = "Username can only contain letters, numbers, '.', '-', and '_'.")
     @NotBlank(message = "Username is required.")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters.")
     private String username;
 
-    @Pattern(regexp = "https?://.+", message = "URI must start with http:// or https://")
+    @Pattern(regexp = "(^$|https?://.+)", message = "URI must start with http:// or https://")
     private String uri;
 
     @NotBlank(message = "Password is required.")
