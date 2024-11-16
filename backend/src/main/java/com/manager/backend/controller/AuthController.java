@@ -34,10 +34,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto loginDto) {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-            User user = userRepository.findByEmail(loginDto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
-            String token = jwtUtil.generateToken(loginDto.getEmail(), user.getEmail());
-
+            String email = loginDto.getEmail().toLowerCase();
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, loginDto.getPassword()));
+            User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+            String token = jwtUtil.generateToken(email, user.getEmail());
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);

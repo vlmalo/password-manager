@@ -6,13 +6,16 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "passwords")
 public class Password {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+
+    private UUID id;
 
     @Pattern(regexp = "^[a-zA-Z0-9._-]*$", message = "Item name can only contain letters, numbers, '.', '-', and '_'.")
     @NotBlank(message = "Item name is required.")
@@ -24,8 +27,11 @@ public class Password {
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters.")
     private String username;
 
-    @Pattern(regexp = "(^$|https?://.+)", message = "URI must start with http:// or https://")
+    @Pattern(regexp = "(^$|https?://[A-Za-z0-9-._~:/?&=+#\\[\\]@!$'()*+,;]+)", message = "URI must start with http:// or https:// and contain only valid URL characters.")
     private String uri;
+
+
+
 
     @NotBlank(message = "Password is required.")
     @Size(min = 1, max = 64, message = "Password must be between 1 and 64 characters.")
@@ -38,11 +44,11 @@ public class Password {
     private byte[] salt;
 
     @Column(name = "user_id")
-    private Long userId;
+    private UUID userId;
     // Constructors
     public Password() {}
 
-    public Password(String itemName, String username, String uri, String password, String notes, Long userId) {
+    public Password(String itemName, String username, String uri, String password, String notes, UUID userId) {
         this.itemName = itemName;
         this.username = username;
         this.uri = uri;
@@ -59,19 +65,19 @@ public class Password {
     public void setSalt(byte[] salt) {
         this.salt = salt;
     }
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/passwords")
@@ -29,11 +30,11 @@ public class PasswordController {
 
     @GetMapping
     public List<Password> getPasswords(@AuthenticationPrincipal UserDetails userDetails, @RequestParam String masterPassword) {
-        Long userId = getUserIdFromUserDetails(userDetails);
+        UUID userId = getUserIdFromUserDetails(userDetails);
         return passwordService.getPasswordsByUserId(userId, masterPassword);
     }
 
-    private Long getUserIdFromUserDetails(UserDetails userDetails) {
+    private UUID getUserIdFromUserDetails(UserDetails userDetails) {
         String email = userDetails.getUsername();
         return userService.findUserIdByEmail(email);
     }
@@ -46,7 +47,7 @@ public class PasswordController {
             return ResponseEntity.badRequest().build();
         }
 
-        Long userId = getUserIdFromUserDetails(userDetails);
+        UUID userId = getUserIdFromUserDetails(userDetails);
         password.setUserId(userId);
 
         byte[] salt = AESUtil.generateSalt();
@@ -58,9 +59,9 @@ public class PasswordController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Password> updatePassword(@PathVariable Long id, @RequestBody Password updatedPassword, @RequestParam String masterPassword, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Password> updatePassword(@PathVariable UUID id, @RequestBody Password updatedPassword, @RequestParam String masterPassword, @AuthenticationPrincipal UserDetails userDetails) {
         System.out.println("Updating password with ID: " + id);
-        Long userId = getUserIdFromUserDetails(userDetails);
+        UUID userId = getUserIdFromUserDetails(userDetails);
         if (!passwordService.userOwnsPassword(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -77,8 +78,8 @@ public class PasswordController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePassword(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = getUserIdFromUserDetails(userDetails);
+    public ResponseEntity<?> deletePassword(@PathVariable UUID id, @AuthenticationPrincipal UserDetails userDetails) {
+        UUID userId = getUserIdFromUserDetails(userDetails);
         if (!passwordService.userOwnsPassword(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access");
         }
@@ -86,8 +87,8 @@ public class PasswordController {
         return ResponseEntity.ok().body("{\"message\": \"Password entry deleted successfully.\"}");
     }
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPasswordById(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = getUserIdFromUserDetails(userDetails);
+    public ResponseEntity<?> getPasswordById(@PathVariable UUID id, @AuthenticationPrincipal UserDetails userDetails) {
+        UUID userId = getUserIdFromUserDetails(userDetails);
 
         if (!passwordService.userOwnsPassword(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Unauthorized access");

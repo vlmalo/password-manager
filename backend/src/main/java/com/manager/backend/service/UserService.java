@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
@@ -27,8 +28,10 @@ public class UserService {
     public User registerUser(UserRegistrationDto registrationDto) {
         validatePassword(registrationDto.getPassword());
 
-        if (userRepository.findByEmail(registrationDto.getEmail()).isPresent()) {
-            throw new RuntimeException("User already exists with this email");
+        String email = registrationDto.getEmail().toLowerCase();
+
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("Email is already in use.");
         }
 
         // Create new user
@@ -56,7 +59,7 @@ public class UserService {
             throw new RuntimeException("Password must contain at least one special character (!@#$%^&*).");
         }
     }
-    public Long findUserIdByEmail(String email) {
+    public UUID findUserIdByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         return userOptional.map(User::getId).orElse(null);
     }

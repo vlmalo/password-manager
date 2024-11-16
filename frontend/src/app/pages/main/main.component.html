@@ -76,12 +76,15 @@
 
               <div class="input-group">
                 <label for="uri">URI</label>
-                <input type="text" id="uri" name="uri" class="form-control" [(ngModel)]="passwordToEdit.uri" pattern="https?://.+" title="Include http:// or https://">
+                <input type="text" id="uri" name="uri" class="form-control" [(ngModel)]="passwordToEdit.uri"
+                       pattern="https?://[A-Za-z0-9-._~:/?#[\]@!$&'()*+,;=]+"
+                       title="Include http:// or https:// and only valid URL characters."
+                       required>
                 <div *ngIf="addPasswordForm.controls['uri']?.invalid && (addPasswordForm.controls['uri']?.dirty || addPasswordForm.controls['uri']?.touched)">
-                  <small *ngIf="addPasswordForm.controls['uri']?.errors?.['pattern']">Please enter a valid URL starting with http:// or https://</small>
+                  <small *ngIf="addPasswordForm.controls['uri']?.errors?.['pattern']">Please enter a valid URL starting with http:// or https:// and containing only valid characters.</small>
                 </div>
               </div>
-            </div>
+
 
             <div class="form-group">
               <label for="password">Password:</label>

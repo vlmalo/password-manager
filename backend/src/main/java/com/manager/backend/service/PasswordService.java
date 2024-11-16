@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PasswordService {
@@ -20,7 +21,7 @@ public class PasswordService {
         this.passwordRepository = passwordRepository;
     }
 
-    public List<Password> getPasswordsByUserId(Long userId, String masterPassword) {
+    public List<Password> getPasswordsByUserId(UUID userId, String masterPassword) {
         List<Password> passwords = passwordRepository.findByUserId(userId);
         for (Password password : passwords) {
             try {
@@ -35,7 +36,7 @@ public class PasswordService {
     }
 
 
-    public Optional<Password> getPasswordById(Long id) {
+    public Optional<Password> getPasswordById(UUID id) {
         return passwordRepository.findById(id);
     }
 
@@ -58,7 +59,7 @@ public class PasswordService {
 
 
 
-    public Password updatePassword(Long passwordId, Password updatedPassword, String masterPassword, byte[] salt) {
+    public Password updatePassword(UUID passwordId, Password updatedPassword, String masterPassword, byte[] salt) {
         // Ensure that the password exists before updating
         if (!passwordRepository.existsById(passwordId)) {
             throw new RuntimeException("Password not found");
@@ -76,11 +77,11 @@ public class PasswordService {
         return passwordRepository.save(updatedPassword);
     }
 
-    public boolean userOwnsPassword(Long userId, Long passwordId) {
+    public boolean userOwnsPassword(UUID userId, UUID passwordId) {
         Optional<Password> password = passwordRepository.findById(passwordId);
         return password.isPresent() && password.get().getUserId().equals(userId);
     }
-    public void deletePassword(Long passwordId) {
+    public void deletePassword(UUID passwordId) {
         passwordRepository.deleteById(passwordId);
     }
 }
