@@ -22,8 +22,9 @@ public class JwtUtil {
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        // encode to avoid exposing sk in memory
-
+    }
+    public String extractEmail(String token) {
+        return extractClaim(token, claims -> claims.get("email", String.class));
     }
 
     public String extractUsername(String token) {
@@ -42,9 +43,9 @@ public class JwtUtil {
                 .getBody();
     }
 
-    public Boolean validateToken(String token, String username) {
-        final String extractedUsername = extractUsername(token);
-        return (extractedUsername.equals(username) && !isTokenExpired(token));
+    public Boolean validateToken(String token, String email) {
+        final String extractedEmail = extractEmail(token);
+        return (extractedEmail.equals(email) && !isTokenExpired(token));
     }
 
     private Boolean isTokenExpired(String token) {
@@ -55,18 +56,20 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public String generateToken(String username, String email) {
+    public String generateToken(String email, String userId) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
-        return createToken(claims, username);
+        claims.put("user_id", userId);
+        return createToken(claims, email);
     }
+
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30 minutes
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10)) // 10 minutes expiration
                 .signWith(SignatureAlgorithm.HS256, Base64.getDecoder().decode(secretKey))
                 .compact();
     }
