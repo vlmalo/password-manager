@@ -33,10 +33,11 @@
       <!-- Password entries -->
       <div *ngIf="passwords.length > 0; else noPasswords">
         <div *ngFor="let password of passwords">
-          <app-gen-passwords [password]="password"
-                             (passwordDeleted)="onPasswordDeleted()"
-                             (modifyPassword)="openModal($event)">
-            ></app-gen-passwords>
+          <app-gen-passwords
+            [password]="password"
+            (passwordDeleted)="onPasswordDeleted()"
+            (modifyPassword)="openModal($event)">
+          </app-gen-passwords>
         </div>
       </div>
       <ng-template #noPasswords>
@@ -58,7 +59,7 @@
                 <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['required']">Item name is required.</small>
                 <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['minlength']">Item name must be at least 3 characters.</small>
                 <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['maxlength']">Item name cannot exceed 50 characters.</small>
-                <small *ngIf="addPasswordForm.controls['itemNam']?.errors?.['pattern']">Item name can only contain letters, numbers, '.', '-', and '_'.</small>
+                <small *ngIf="addPasswordForm.controls['itemName']?.errors?.['pattern']">Item name can only contain letters, numbers, '.', '-', and '_'.</small>
               </div>
             </div>
 
@@ -84,7 +85,7 @@
                   <small *ngIf="addPasswordForm.controls['uri']?.errors?.['pattern']">Please enter a valid URL starting with http:// or https:// and containing only valid characters.</small>
                 </div>
               </div>
-
+            </div>
 
             <div class="form-group">
               <label for="password">Password:</label>
