@@ -85,11 +85,11 @@ export class MainComponent implements OnInit {
       };
 
       const saveObservable = passwordData.id
-        ? this.passwordService.updatePassword(passwordData.id, passwordData)
+        ? this.passwordService.updatePassword(passwordData.id, passwordData, this.masterPassword)
         : this.passwordService.addPassword(passwordData, this.masterPassword);
       saveObservable.subscribe(
         (response) => {
-          console.log('Password saved successfully:', response);
+          console.log('Password saved successfully:');
           this.loadPasswords();
           this.closeModal();
         },

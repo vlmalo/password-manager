@@ -30,7 +30,9 @@ export class PasswordService {
       headers: this.getAuthHeaders(),
       params: { masterPassword }
     }).pipe(
-      tap(response => console.log('Response from addPassword:', response)),
+      tap(response => {
+        console.log(`Password entry added successfully.`);
+      }),
       catchError(error => {
         console.error('Error adding password:', error);
         return throwError(error);
@@ -38,11 +40,12 @@ export class PasswordService {
     );
   }
 
+
   deletePassword(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, {
       headers: this.getAuthHeaders(),
     }).pipe(
-      tap(response => console.log('Response from deletePassword:', response)),
+      tap(response => console.log('Password entry deleted successfully.')),
       catchError(error => {
         console.error('Error deleting password:', error);
         return throwError(error);
@@ -50,11 +53,14 @@ export class PasswordService {
     );
   }
 
-  updatePassword(id: number, passwordData: any): Observable<any> {
+  updatePassword(id: number, passwordData: any, masterPassword: string): Observable<any> {
+    const params = new HttpParams().set('masterPassword', masterPassword);
+
     return this.http.put(`${this.apiUrl}/${id}`, passwordData, {
       headers: this.getAuthHeaders(),
+      params,
     }).pipe(
-      tap(response => console.log('Response from updatePassword:', response)),
+      tap(response => console.log('Password entry was updated successfully')),
       catchError(error => {
         console.error('Error updating password:', error);
         return throwError(error);
@@ -62,13 +68,15 @@ export class PasswordService {
     );
   }
 
+
+
   getPasswords(masterPassword: string): Observable<Password[]> {
     const params = new HttpParams().set('masterPassword', masterPassword);
     return this.http.get<Password[]>(this.apiUrl, {
       headers: this.getAuthHeaders(),
       params,
     }).pipe(
-      tap(passwords => console.log('Fetched passwords:', passwords)),
+      tap(passwords => console.log('Successfully fetched passwords')),
       catchError(error => {
         console.error('Error fetching passwords:', error);
         return throwError(error);

@@ -58,22 +58,28 @@ public class PasswordService {
     }
 
 
+    public Password updatePassword(UUID passwordId, Password updatedPassword, String masterPassword) {
+        // Fetch existing password entry
+        Password existingPassword = passwordRepository.findById(passwordId)
+                .orElseThrow(() -> new RuntimeException("Password not found"));
 
-    public Password updatePassword(UUID passwordId, Password updatedPassword, String masterPassword, byte[] salt) {
-        // Ensure that the password exists before updating
-        if (!passwordRepository.existsById(passwordId)) {
-            throw new RuntimeException("Password not found");
+        byte[] salt = existingPassword.getSalt();
+        if (salt == null || salt.length == 0) {
+            salt = AESUtil.generateSalt();
         }
 
         try {
             SecretKey secretKey = AESUtil.deriveKey(masterPassword, salt);
             String encryptedPassword = AESUtil.encrypt(updatedPassword.getPassword(), secretKey);
             updatedPassword.setPassword(encryptedPassword);
+            updatedPassword.setSalt(salt); // Preserve or add salt
         } catch (Exception e) {
             throw new RuntimeException("Encryption failed", e);
         }
 
         updatedPassword.setId(passwordId);
+        updatedPassword.setUserId(existingPassword.getUserId()); // Ensure userId consistency
+
         return passwordRepository.save(updatedPassword);
     }
 

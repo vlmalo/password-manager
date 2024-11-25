@@ -17,17 +17,16 @@ public class Password {
 
     private UUID id;
 
-    @Pattern(regexp = "^[a-zA-Z0-9._-]*$", message = "Item name can only contain letters, numbers, '.', '-', and '_'.")
+    @Pattern(regexp = "^[A-Za-z0-9.-_]*$", message = "Item name can only contain letters, numbers, '.', '-', and '_'.")
     @NotBlank(message = "Item name is required.")
     @Size(min = 3, max = 50, message = "Item name must be between 3 and 50 characters.")
     private String itemName;
 
-    @Pattern(regexp = "^[a-zA-Z0-9._-]*$", message = "Username can only contain letters, numbers, '.', '-', and '_'.")
-    @NotBlank(message = "Username is required.")
+    @Pattern(regexp = "^[A-Za-z0-9.-_]*$", message = "Username can only contain letters, numbers, '.', '-', and '_'.")    @NotBlank(message = "Username is required.")
     @Size(min = 3, max = 50, message = "Username must be between 3 and 50 characters.")
     private String username;
 
-    @Pattern(regexp = "(^$|https?://[A-Za-z0-9-._~:/?&=+#\\[\\]@!$'()*+,;]+)", message = "URI must start with http:// or https:// and contain only valid URL characters.")
+    @Pattern(regexp = "(^$|https?://[A-Za-z0-9-._~:/?&=+#\\[\\]]+)", message = "URI must start with http:// or https:// and contain only valid URL characters.")
     private String uri;
 
 

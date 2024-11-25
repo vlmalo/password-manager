@@ -57,23 +57,26 @@ public class PasswordController {
     }
 
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<Password> updatePassword(@PathVariable UUID id, @RequestBody Password updatedPassword, @RequestParam String masterPassword, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Password> updatePassword(
+            @PathVariable UUID id,
+            @RequestBody Password updatedPassword,
+            @RequestParam String masterPassword,
+            @AuthenticationPrincipal UserDetails userDetails
+    ) {
         System.out.println("Updating password with ID: " + id);
         UUID userId = getUserIdFromUserDetails(userDetails);
+
         if (!passwordService.userOwnsPassword(userId, id)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        if (!passwordService.getPasswordById(id).isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
 
         updatedPassword.setUserId(userId);
-        byte[] salt = AESUtil.generateSalt();
-        Password modifiedPassword = passwordService.updatePassword(id, updatedPassword, masterPassword, salt);
+        Password modifiedPassword = passwordService.updatePassword(id, updatedPassword, masterPassword);
+
         return ResponseEntity.ok(modifiedPassword);
     }
+
 
 
 

@@ -52,28 +52,5 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid credentials"));
         }
     }
-
-
-
-    private String createRefreshTokenCookie(String refreshToken) {
-        return "refreshToken=" + refreshToken + "; HttpOnly; Secure; Path=/; Max-Age=" + (60 * 60 * 24 * 7); // 7 days
-    }
-
-    @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", defaultValue = "") String refreshToken) {
-        if (refreshToken.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Refresh token is missing"));
-        }
-
-        try {
-            String email = jwtUtil.extractEmail(refreshToken);
-            String newAccessToken = jwtUtil.generateToken(email, email); // generate new access token (JWT)
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("accessToken", newAccessToken);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Invalid refresh token"));
-        }
-    }
+    
 }
