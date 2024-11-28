@@ -1,6 +1,7 @@
 package com.manager.backend.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -40,6 +41,7 @@ public class Password {
     @Pattern(regexp = "^[a-zA-Z0-9\\s.,!@#$%^&*()]*$", message = "Only certain special characters are allowed (.,!@#$%^&*).")
     private String notes;
 
+    @JsonIgnore
     private byte[] salt;
 
     @Column(name = "user_id")
