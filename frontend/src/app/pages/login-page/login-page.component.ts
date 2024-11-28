@@ -37,35 +37,25 @@ export class LoginPageComponent implements OnInit {
 
       this.userService.loginUser(authRequest).subscribe(
         (response) => {
-          console.log('Login successful', response.message);
-          localStorage.setItem('jwtToken', response.token);
+          console.log('Login successful', response);
           localStorage.setItem('username', response.username);
           localStorage.setItem('email', response.email);
           this.router.navigate(['/dashboard']);
         },
         (error) => {
           console.error('Login failed', error);
-          this.errorMessage = 'Invalid email or password';
+          this.errorMessage = error?.error?.error || 'Invalid email or password';
         }
       );
-
     } else {
-      console.log('Form is invalid');
       this.errorMessage = 'Please fill in all required fields.';
     }
   }
 
-
   togglePasswordVisibility(): void {
     const passwordField = document.getElementById('password') as HTMLInputElement;
-    const passwordIcon = document.getElementById('passwordIcon') as HTMLImageElement;
-
-    if (passwordField.type === 'password') {
-      passwordField.type = 'text';
-      passwordIcon.src = 'assets/images/hide.png';
-    } else {
-      passwordField.type = 'password';
-      passwordIcon.src = 'assets/images/eye.png';
+    if (passwordField) {
+      passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
     }
   }
 }

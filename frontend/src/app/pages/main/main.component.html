@@ -11,7 +11,7 @@
     <h1>Userdata:</h1>
     <p>Name: {{ username }}</p>
     <p>Email: {{ email }}</p>
-    <button (click)="logout()">Logout</button>
+    <button (click)="logout($event)">Logout</button>
   </div>
 
   <div class="layout">
@@ -20,7 +20,7 @@
         <li><a href="#">Dashboard</a></li>
         <li><a href="#">Manage Passwords</a></li>
         <li><a href="#">Settings</a></li>
-        <li><a href="#" (click)="logout()">Logout</a></li>
+        <li><a href="#" (click)="logout($event)">Logout</a></li>
       </ul>
     </nav>
 

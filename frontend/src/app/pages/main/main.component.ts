@@ -47,10 +47,12 @@ export class MainComponent implements OnInit {
     this.loadPasswords();
   }
 
-  logout(): void {
+  logout(event: Event): void {
+    event.preventDefault();
     this.userService.logout();
     this.router.navigate(['/login']);
   }
+
 
   ngOnInit(): void {
     this.username = localStorage.getItem('username');

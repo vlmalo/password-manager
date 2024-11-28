@@ -63,7 +63,7 @@
           <small *ngIf="registerForm.get('masterPassword')?.hasError('missingNumber') && registerForm.get('masterPassword')?.touched" class="error-message">
             Password must include at least one number.
           </small>
-          <small *ngIf="registerForm.get('masterPassword')?.hasError('missingSpecial') && registerForm.get('masterPassword')?.touched" class="error-message">
+          <small *ngIf="registerForm.get('masterPassword')?.hasError('invalidSpecial') && registerForm.get('masterPassword')?.touched" class="error-message">
             Password must include at least one special character (!&#64;#$%^&*).
           </small>
         </div>

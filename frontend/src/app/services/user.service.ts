@@ -1,36 +1,53 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
   private apiUrl = 'http://localhost:8080/api/users';
-  private token: string | null = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   loginUser(loginData: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, loginData)
+    return this.http.post(`${this.apiUrl}/login`, loginData, { withCredentials: true })
       .pipe(catchError(this.handleError));
-  }
-
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    return throwError('Something went wrong');
   }
 
   registerUser(registerData: { name: string; email: string; password: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, registerData)
       .pipe(catchError(this.handleError));
-
   }
 
-  logout() {
-    localStorage.removeItem('jwtToken');
+  logout(): void {
+    // Clear user-related data from localStorage
     localStorage.removeItem('username');
     localStorage.removeItem('email');
-    this.token = null;
+
+    // Make a backend call to clear the JWT cookie
+    this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).pipe(
+      catchError((error) => {
+        console.error('Logout failed:', error);
+        return of(null);
+      })
+    ).subscribe(() => {
+      // Navigate to the login page after successful logout
+      this.router.navigate(['/login']);
+    });
+  }
+
+  isAuthenticated(): Observable<boolean> {
+    return this.http.get<boolean>(`${this.apiUrl}/isAuthenticated`, { withCredentials: true })
+      .pipe(
+        catchError(() => of(false))  // Return false on error to indicate not authenticated
+      );
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    console.error('An error occurred:', error);
+    return throwError('Something went wrong. Please try again.');
   }
 }

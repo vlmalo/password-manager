@@ -58,6 +58,11 @@ public class UserService {
         if (!SPECIAL_CHAR_PATTERN.matcher(password).find()) {
             throw new RuntimeException("Password must contain at least one special character (!@#$%^&*).");
         }
+        Pattern invalidCharPattern = Pattern.compile("[^A-Za-z0-9!@#$%^&*]");
+        if (invalidCharPattern.matcher(password).find()) {
+            throw new RuntimeException("Password contains invalid characters. Only letters, numbers, and !@#$%^&* are allowed.");
+        }
+
     }
     public UUID findUserIdByEmail(String email) {
         Optional<User> userOptional = userRepository.findByEmail(email);

@@ -67,6 +67,11 @@ export class RegisterComponent implements OnInit {
       errors['missingSpecial'] = true;
     }
 
+    if (/[^A-Za-z0-9!@#$%^&*]/.test(value)) {
+      errors['invalidSpecial'] = true;
+    }
+
+
     return Object.keys(errors).length ? errors : null;
   }
   ngOnInit(): void {}
@@ -91,7 +96,7 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error => {
-          console.error('Error registering user', error); // Log the error
+          console.error('Error registering user', error);
           this.errorMessage = error.error?.message || 'An unknown error occurred';
         }
       );

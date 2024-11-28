@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import {Password} from './password.modal';
-
+import { Password } from './password.modal';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +13,9 @@ export class PasswordService {
   constructor(private http: HttpClient) {}
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('jwtToken');
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
-    });
+    let headers = new HttpHeaders();
+
+    return headers;
   }
 
   addPassword(passwordData: any, masterPassword: string): Observable<any> {
@@ -28,7 +26,8 @@ export class PasswordService {
 
     return this.http.post<any>(this.apiUrl, passwordData, {
       headers: this.getAuthHeaders(),
-      params: { masterPassword }
+      params: { masterPassword },
+      withCredentials: true,
     }).pipe(
       tap(response => {
         console.log(`Password entry added successfully.`);
@@ -40,10 +39,10 @@ export class PasswordService {
     );
   }
 
-
   deletePassword(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, {
       headers: this.getAuthHeaders(),
+      withCredentials: true,
     }).pipe(
       tap(response => console.log('Password entry deleted successfully.')),
       catchError(error => {
@@ -59,6 +58,7 @@ export class PasswordService {
     return this.http.put(`${this.apiUrl}/${id}`, passwordData, {
       headers: this.getAuthHeaders(),
       params,
+      withCredentials: true,
     }).pipe(
       tap(response => console.log('Password entry was updated successfully')),
       catchError(error => {
@@ -68,13 +68,12 @@ export class PasswordService {
     );
   }
 
-
-
   getPasswords(masterPassword: string): Observable<Password[]> {
     const params = new HttpParams().set('masterPassword', masterPassword);
     return this.http.get<Password[]>(this.apiUrl, {
       headers: this.getAuthHeaders(),
       params,
+      withCredentials: true,
     }).pipe(
       tap(passwords => console.log('Successfully fetched passwords')),
       catchError(error => {

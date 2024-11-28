@@ -37,12 +37,7 @@ public class SecurityConfig {
 
 
 
-    // When using JWT for authentication in single-page applications (SPAs)
-    // or APIs, especially when the JWT is stored in local storage or session storage,
-    // CSRF tokens may not be necessary. This is because CSRF attacks exploit the fact
-    // that browsers automatically send cookies with each request, but if
-    // JWT are stored outside of cookies (in local storage, for example), the request will not
-    // be automatically sent, reducing the need for CSRF protection.
+
 
     // https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html
     // https://stackoverflow.com/questions/77266685/spring-security-6-cors-is-deprecated-and-marked-for-removal
