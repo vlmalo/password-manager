@@ -6,10 +6,15 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { PasswordService } from '../../services/password.service';
 import {FormsModule} from '@angular/forms';
+import {AuthInterceptor} from '../../services/auth.intercepter';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
 
 @Component({
   selector: 'app-main',
   standalone: true,
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+  ],
   imports: [
     GenPasswordsComponent,
     CommonModule,

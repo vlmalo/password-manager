@@ -41,9 +41,6 @@ public class PasswordService {
     }
 
 
-    public List<Password> getAllPasswords() {
-        return passwordRepository.findAll();
-    }
 
     public Password addPassword(Password password, String masterPassword, byte[] salt) {
         try {

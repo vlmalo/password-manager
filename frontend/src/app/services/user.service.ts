@@ -23,7 +23,6 @@ export class UserService {
   }
 
   logout(): void {
-    // Clear user-related data from localStorage
     localStorage.removeItem('username');
     localStorage.removeItem('email');
 
@@ -34,7 +33,6 @@ export class UserService {
         return of(null);
       })
     ).subscribe(() => {
-      // Navigate to the login page after successful logout
       this.router.navigate(['/login']);
     });
   }
@@ -42,7 +40,7 @@ export class UserService {
   isAuthenticated(): Observable<boolean> {
     return this.http.get<boolean>(`${this.apiUrl}/isAuthenticated`, { withCredentials: true })
       .pipe(
-        catchError(() => of(false))  // Return false on error to indicate not authenticated
+        catchError(() => of(false))
       );
   }
 
@@ -50,4 +48,6 @@ export class UserService {
     console.error('An error occurred:', error);
     return throwError('Something went wrong. Please try again.');
   }
+
+
 }

@@ -45,17 +45,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configure CORS
-                .csrf(AbstractHttpConfigurer::disable) // no csrf as it I have stateless authentication
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/users/login", "/api/users/register").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-                //.requiresChannel(channel -> channel.anyRequest().requiresSecure());
-        // potential issue (in reality don't know):
-        // BECAUSE OF LOCALHOST I HAVE http, it means that https enforce doesn't work properly
-        // as there is a mismatch
+
 
         return http.build();
     }
